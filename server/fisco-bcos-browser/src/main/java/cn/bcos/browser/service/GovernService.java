@@ -31,10 +31,12 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -55,7 +57,7 @@ import cn.bcos.browser.dto.TransactionInfoDTO;
 @Component
 public class GovernService {
 	private Logger logger = LoggerFactory.getLogger(GovernService.class);
-
+	
 	public void start(){
 		handleBlockChainInfo();
 	}

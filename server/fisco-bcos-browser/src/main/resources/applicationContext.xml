@@ -37,11 +37,18 @@
 		<property name="concurrent" value="false" />
 	</bean>
 	
-	<bean id="handleBlockInfo" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	<!--  <bean id="handleBlockInfo" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
 			<bean class="cn.bcos.browser.service.GovernService" />
 		</property>
 		<property name="targetMethod" value="handleBlockInfo" />
+		<property name="concurrent" value="false" />
+	</bean>-->
+	<bean id="startQueue" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<bean class="cn.bcos.browser.service.SyncService" />
+		</property>
+		<property name="targetMethod" value="startQueue" />
 		<property name="concurrent" value="false" />
 	</bean>
 	
@@ -67,9 +74,14 @@
 		<property name="cronExpression" value="${startTrigger.schedule.time}" />
 	</bean>
 	
-	<bean id="blockInfoTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<!--  <bean id="blockInfoTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="handleBlockInfo" />
 		<property name="cronExpression" value="${blockInfoTrigger.schedule.time}" />
+	</bean>-->
+	<bean id="queueTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="startQueue" />
+		<property name="startDelay" value="2000" />
+		<property name="repeatCount" value="0"/>
 	</bean>
 	
 	<bean id="pendingTransTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -87,7 +99,8 @@
 		<property name="triggers">
 			<list>
          			<ref bean="startTrigger" />       
-            		<ref bean="blockInfoTrigger" />              
+            		<!--  <ref bean="blockInfoTrigger" />-->
+            		<ref bean="queueTrigger" />              
            		    <ref bean="pendingTransTrigger" /> 
            		    <ref bean="NodeInfoTrigger" />                 
 			</list>
@@ -125,6 +138,15 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="mapperLocations" value="classpath:/mapper/*.xml" />
 	</bean>
+    <bean id="threadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="50" />
+		<property name="maxPoolSize" value="100" />
+		<property name="queueCapacity" value="500" />
+		<property name="keepAliveSeconds" value="60" />
+		<property name="rejectedExecutionHandler">
+			<bean class="java.util.concurrent.ThreadPoolExecutor.CallerRunsPolicy" />
+		</property>
+    </bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
