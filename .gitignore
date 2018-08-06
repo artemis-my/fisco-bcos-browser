@@ -1,7 +1,7 @@
 /.gradle/
-./server/fisco-bcos-browser/build/
-./server/fisco-bcos-browser/bin/
-./server/fisco-bcos-browser/log/
-./server/fisco-bcos-browser/.classpath
-./server/fisco-bcos-browser/.project
-./server/fisco-bcos-browser/.settings/
+/server/fisco-bcos-browser/build/
+/server/fisco-bcos-browser/bin/
+/server/fisco-bcos-browser/log/
+/server/fisco-bcos-browser/.classpath
+/server/fisco-bcos-browser/.project
+/server/fisco-bcos-browser/.settings/
